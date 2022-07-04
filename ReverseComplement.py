@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os
 import argparse
+#This script is created be yuxikai
+# If anything happen yuxi.kai@163.com for u 2 contact with me
 
 
 def Instructions():
