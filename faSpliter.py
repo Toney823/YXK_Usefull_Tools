@@ -8,7 +8,7 @@ import gzip
 def Instructions():
     Instruction = argparse.ArgumentParser()
     Instruction.add_argument('-f', '--fasta', help='Your fasta file', required='True')
-    Instruction.add_argument('-n', '--number', help='How many number do you want to split', required='True')
+    Instruction.add_argument('-n', '--number', help='How many parts do you want to split', required='True')
     return Instruction.parse_args()
 
 
