@@ -58,8 +58,8 @@ def reverse(in_fasta: str, start: str, end: str):
     tmp_l = []
     tmp_ll = []
     new_block.append(blocks[0])
-    tmp_ll.append(blocks[1][:int(start)])
-    for i in blocks[1][int(start):int(end)]:
+    tmp_ll.append(blocks[1][:int(start)-1])
+    for i in blocks[1][int(start)-1:int(end)]:
         tmp_l.append(db[i])
     tmp_ll.append(''.join(tmp_l[::-1]))
     tmp_ll.append(blocks[1][int(end):])
@@ -68,7 +68,7 @@ def reverse(in_fasta: str, start: str, end: str):
 
 
 def writeFa(in_f: str, s: str, e: str):
-    with open('.'.join(in_f.split('.')[:-1]) + '.reversing_' + s + '_' + e + '.fasta', 'w')as f:
+    with open('.'.join(in_f.split('.')[:-1]) + '.' + s + '_' + e + '.Reversed.fasta', 'w')as f:
         f.write('\n'.join(reverse(in_fasta=in_f, start=s, end=e))+'\n')
 
 
