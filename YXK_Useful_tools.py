@@ -9,7 +9,8 @@ import urllib.request
 import random
 import numpy as np
 from scipy import stats
-
+import re
+import gzip
 
 def category(data: list):
     # 可以找到这个list中有哪些数据（不重复的数据）
@@ -79,8 +80,7 @@ def block_cacher_v2(lines: list, separator_first: str):
         if line.startswith(separator_first):
             if len(block) > 0:
                 file_blocks.append(block)
-            block = []
-            block.append(line)
+            block = [line]
             continue
         block.append(line)
     if len(block) > 0:
@@ -131,7 +131,7 @@ def empty_filter(in_list: list):
 def block_merge(block_list: list):
     # merging the block you extracted or merge your block#
     # block is a two line list, which contains a header and a sequence of this header#
-    # usually when dealing with fasta_file contain protein sequence or DNA sequences#
+    # usually when dealing with fasta_file contains protein sequence or DNA sequences#
     list1 = []
     for block in block_list:
         list1.append('\n'.join(block))
@@ -205,7 +205,7 @@ def codonW_blk_To_preplot_txt(in_blk: str, out_toplot_txt: str):
     Thr = []
     Asn = []
     Lys = []
-    arg = []
+    Arg = []
     Met = []
     Val = []
     Ala = []
@@ -311,13 +311,51 @@ def codonW_blk_To_preplot_txt(in_blk: str, out_toplot_txt: str):
 
 def openfile(path: str):
     lines = []
-    with open(path, 'r') as f_open:
+    with open(path, 'r', encoding='utf-8') as f_open:
         file_lines = f_open.read().split('\n')
     for line in file_lines:
         if len(line) == 0 or '#' == line[0]:
             continue
         lines.append(line)
     return lines
+
+
+class openfile_V2:
+
+    def __init__(self, inf):
+        self.inf = inf
+        return
+
+    def noHash(inf: str):
+        lines = []
+        with open(inf, 'r', encoding='utf-8') as f_open:
+            file_lines = f_open.read().split('\n')
+        for line in file_lines:
+            if len(line) == 0:
+                continue
+            lines.append(line)
+        return lines
+
+    def utf8(inf: str):
+        lines = []
+        with open(inf, 'r', encoding='utf-8') as f_open:
+            file_lines = f_open.read().split('\n')
+        for line in file_lines:
+            if len(line) == 0 or '#' == line[0]:
+                continue
+            lines.append(line)
+        return lines
+
+    def gz(inf: str):
+        lines = []
+        with gzip.open(inf, 'rt', encoding='utf-8') as f_open:
+            file_lines = f_open.read().split('\n')
+        for line in file_lines:
+            if len(line) == 0 or '#' == line[0]:
+                continue
+            lines.append(line)
+        return lines
+
 
 
 def randomly_get_seq_from_fasta(in_block: list, how_many_window_do_you_want: int, how_long_seq_do_you_want: int):
@@ -715,3 +753,110 @@ def show_path(dir_name: str):
             apath = os.path.join(maindir, filename)
             result.append(apath)
     return result
+
+
+class filter:
+
+    def __init__(self, input):
+        self.input = input
+
+    def filteNum(input: str):
+        return re.sub(r'\d+', '', input)
+
+    def filtestr(input: str):
+        return re.sub(r'[^a-zA-Z]', '', input)
+
+
+def splitNumber(faL: list, n: str):
+    size=int(len(faL) / int(n))
+    s = []
+    for i in range(0, int(len(faL)) + 1, size):
+        c = faL[i:i + size]
+        if c != []:
+            s.append(c)
+    return s
+
+
+class nStr:
+
+    def Sum(in_str: str):
+        l = []
+        for i in in_str.strip().split():
+            l.append(float(i))
+        return sum(l)
+
+    def Ave(in_str: str):
+        l = []
+        for i in in_str.strip().split():
+            l.append(float(i))
+        return sum(l)/len(l)
+
+class nameLengthDicker:
+
+    def string(in_bed: str):
+        dick = {}
+        for l in openfile(in_bed):
+            dick[l.strip().split()[0]] = l.strip().split()[1]
+        return dick
+
+    def int(in_bed: str):
+        dick = {}
+        for l in openfile(in_bed):
+            dick[l.strip().split()[0]] = int(l.strip().split()[1])
+        return dick
+
+
+def median(data):
+    data.sort()
+    half = len(data) // 2
+    return int((data[half] + data[~half])/2)
+
+
+class changeUnit:
+
+    class base:
+
+        def b2mb(in_n: int):
+            return in_n / 1000 / 1000
+
+        def b2gb(in_n: int):
+            return in_n / 1000 / 1000 / 1000
+
+        def b2kb(in_n: int):
+            return in_n / 1000
+
+        def kb2b(in_n: int):
+            return in_n * 1000
+
+        def gb2b(in_n: int):
+            return in_n * 1000 * 1000
+
+        def kb2gb(in_n: int):
+            return in_n / 1000
+
+        def gb2kb(in_n: int):
+            return in_n * 1000
+
+    class bit:
+
+        def b2mb(in_n: int):
+            return in_n/1024/1024
+
+        def b2gb(in_n: int):
+            return in_n/1024/1024/1024
+
+        def b2kb(in_n: int):
+            return in_n/1024
+
+        def kb2b(in_n: int):
+            return in_n*1024
+
+        def gb2b(in_n: int):
+            return in_n*1024*1024
+
+        def kb2gb(in_n: int):
+            return in_n/1024
+
+        def gb2kb(in_n: int):
+            return in_n*1024
+
