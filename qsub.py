@@ -5,10 +5,11 @@ import random
 
 
 def Instructions():
-    Instruction = argparse.ArgumentParser()
-    Instruction.add_argument('-c', '--cpuNumber', help='福建省超算上‘rtm单核单线程’，你的线程数和核数要相等, 参数要求为整数(int)', required='True')
-    Instruction.add_argument('-m', '--mem', help='指定节点内存大小(单位为GB), 参数要求为整数(int)', required='True')
-    Instruction.add_argument('-s', '--script', help='你的脚本.sh文件, 参数要求为字符串类型(绝对路径，使用命令pwd可得到)', required='True')
+    Instruction = argparse.ArgumentParser(description="由于近期反复提交任务出现内存报错，需要手动挑选内存，为了节省时间我写了这个脚本")
+    Instruction.add_argument('-c', '--cpuNumber', type=int , default=1, help='福建省超算上‘rtm单核单线程’，你的线程数和核数要相等, 参数要求为整数(int)', required='True')
+    Instruction.add_argument('-m', '--mem', type=int, default=10, help='指定节点内存大小(单位为GB), 参数要求为整数(int)', required='True')
+    Instruction.add_argument('-s', '--script', type=str, help='你的脚本.sh文件, 参数要求为字符串类型(绝对路径，使用命令pwd可得到)', required='True')
+    Instruction.add_argument('-f', '--fat', type=str, default='False', help='是否使用胖节点，默认为False, 需要时填写True')
     return Instruction.parse_args()
 
 
@@ -47,15 +48,27 @@ def getAVAPBS():
 
 
 if __name__ == '__main__':
-    print('由于近期反复提交任务出现内存报错，需要手动挑选内存，为了节省时间我写了这个脚本\n'
-          'enjoy...')
     avPBS = getAVAPBS()
-    cmd = 'qsub -d ./ -l mem='+str(Instructions().mem)+'GB,nodes='+random.choice(avPBS)+':ppn='+str(Instructions().cpuNumber)+' -q share -o '+'.'.join(Instructions().script.split('.')[:-1]) + '.log -e '+'.'.join(Instructions().script.split('.')[:-1])+'.err '+Instructions().script
-    print(cmd)
-    print('ok，我拿到了提交命令，是否提交'
-          '(是:敲回车; 否:Ctrl+C)')
-    c = input('你确定?')
-    if c == '':
-        do = os.popen(cmd)
-        print(do.read())
-        do.close()
+    if Instructions().fat == 'False':
+        cmd = 'qsub -d ./ -l mem='+str(Instructions().mem)+'GB,nodes='+random.choice(avPBS)+':ppn='+str(Instructions().cpuNumber)+' -q share -o '+'.'.join(Instructions().script.split('.')[:-1]) + '.log -e '+'.'.join(Instructions().script.split('.')[:-1])+'.err '+Instructions().script
+        print(cmd)
+        print('ok，我拿到了提交命令，是否提交'
+              '(是:敲回车; 否:Ctrl+C)')
+        c = input('你确定?')
+        if c == '':
+            do = os.popen(cmd)
+            print(do.read())
+            do.close()
+    elif Instructions().fat == 'True':
+        cmd = 'qsub -d ./ -l mem=' + str(Instructions().mem) + 'GB,nodes=1:ppn=' + str(
+            Instructions().cpuNumber) + ' -q fat -o ' + '.'.join(
+            Instructions().script.split('.')[:-1]) + '.log -e ' + '.'.join(
+            Instructions().script.split('.')[:-1]) + '.err ' + Instructions().script
+        print(cmd)
+        print('ok，我拿到了提交命令，是否提交'
+              '(是:敲回车; 否:Ctrl+C)')
+        c = input()
+        if c == '':
+            do = os.popen(cmd)
+            print(do.read())
+            do.close()
