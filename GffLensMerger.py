@@ -14,13 +14,14 @@ def openfile(path: str):
 
 
 p = os.path.abspath('.')+'/'
+# index = openfile(p+'index2.txt')
 wantedgff = []
 wantedlen = []
 l1 = []
 for name in sys.argv[2:]:
     file = p + name + '.gff'
     wholelen = len(list(set([c.split('\t')[0] for c in openfile(file)])))+1
-    tl = [[] for _ in range(1, wholelen)]    
+    tl = [[] for _ in range(1, wholelen)]
     for line in openfile(file):
         chr = int(line.split('\t')[0])
         tl[chr-1].append('\t'.join(line.split('\t')[1:]))
@@ -42,3 +43,6 @@ with open(p + sys.argv[1] + '.merged.gff', 'w')as f:
     f.write('\n'.join(wantedgff))
 with open(p + sys.argv[1] + '.merged.len', 'w')as f:
     f.write('\n'.join(wantedlen))
+
+if len(sys.argv) == 1:
+    print("Usage: python " + sys.argv[0] +" outFileName FolowGffs......")
