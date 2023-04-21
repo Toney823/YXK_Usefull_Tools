@@ -2,6 +2,11 @@ import sys
 import os
 
 
+if len(sys.argv) == 1:
+    print("Usage: python " + sys.argv[0] +" outFileName FolowGffs......")
+    exit()
+
+
 def openfile(path: str):
     lines = []
     with open(path, 'r', encoding='utf-8') as f_open:
@@ -43,6 +48,3 @@ with open(p + sys.argv[1] + '.merged.gff', 'w')as f:
     f.write('\n'.join(wantedgff))
 with open(p + sys.argv[1] + '.merged.len', 'w')as f:
     f.write('\n'.join(wantedlen))
-
-if len(sys.argv) == 1:
-    print("Usage: python " + sys.argv[0] +" outFileName FolowGffs......")
