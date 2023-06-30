@@ -8,7 +8,7 @@ def Instructions():
     Instruction.add_argument('-s', '--scriptName', type=str,
                              help='脚本名字, 参数要求为字符串(str)', required='True')
     Instruction.add_argument('-n', '--jobName', type=str, default='run',
-                             help='指定节点内存大小(单位为GB), 参数要求为整数(int)', required='True')
+                             help='指定任务名, 参数要求为字符串(str)', required='True')
     Instruction.add_argument('-p', '--partition', type=str, default='low',
                              help='提交节点名, 参数要求为字符串(str)', required='True')
     Instruction.add_argument('-c', '--cpuNumber', type=int, default=1,
