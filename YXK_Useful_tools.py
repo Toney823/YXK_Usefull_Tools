@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 import os
 import os.path
 import zipfile
 import string
-import docx
+# import docx
 import jieba
 import urllib.parse
 import urllib.request
@@ -11,8 +12,11 @@ import numpy as np
 from scipy import stats
 import re
 import gzip
+import bisect
+
 
 def category(data: list):
+    # 学习用，实际上可以return list(set(data))
     # 可以找到这个list中有哪些数据（不重复的数据）
     # 例：【1，2，2，3，4，4，4，4，5，6】里面有【1，2，3，4，5，6】
     #        ^ ^     ^  ^ ^  ^ (重复部分)
@@ -187,7 +191,7 @@ def block_upper(in_block: list):
 
 
 def ENC(gc3s: float):
-    return 2 + gc3s + 29/((gc3s*gc3s) + (1-gc3s)*(1-gc3s))
+    return 2 + gc3s + 29 / ((gc3s * gc3s) + (1 - gc3s) * (1 - gc3s))
 
 
 def codonW_blk_To_preplot_txt(in_blk: str, out_toplot_txt: str):
@@ -305,8 +309,16 @@ def codonW_blk_To_preplot_txt(in_blk: str, out_toplot_txt: str):
     [new_file.append(i) for i in Glu]
     [new_file.append(i) for i in Gly]
     [new_file.append(i) for i in Trp]
-    with open(out_toplot_txt, 'w')as f:
+    with open(out_toplot_txt, 'w') as f:
         f.write('\n'.join(new_file))
+
+
+# def openfile_ultimate(path: str, filetype: str = ""):
+#     with open(path, 'r', encoding='utf-8') as fin:
+#         for line in fin:
+#             if len(line.strip()) == 0 or (filetype != 'gff3' and line[0] == '#'):
+#                 continue
+#             yield line.strip()
 
 
 def openfile(path: str):
@@ -320,15 +332,26 @@ def openfile(path: str):
     return lines
 
 
+def openGff(path: str):
+    lines = []
+    with open(path, 'r', encoding='utf-8') as f_open:
+        file_lines = f_open.read().split('\n')
+    for line in file_lines:
+        if len(line) == 0:
+            continue
+        lines.append(line)
+    return lines
+
+
 class openfile_V2:
 
     def __init__(self, inf):
         self.inf = inf
         return
 
-    def noHash(inf: str):
+    def noHash(self):
         lines = []
-        with open(inf, 'r', encoding='utf-8') as f_open:
+        with open(self.inf, 'r', encoding='utf-8') as f_open:
             file_lines = f_open.read().split('\n')
         for line in file_lines:
             if len(line) == 0:
@@ -336,9 +359,9 @@ class openfile_V2:
             lines.append(line)
         return lines
 
-    def utf8(inf: str):
+    def utf8(self):
         lines = []
-        with open(inf, 'r', encoding='utf-8') as f_open:
+        with open(self.inf, 'r', encoding='utf-8') as f_open:
             file_lines = f_open.read().split('\n')
         for line in file_lines:
             if len(line) == 0 or '#' == line[0]:
@@ -346,16 +369,15 @@ class openfile_V2:
             lines.append(line)
         return lines
 
-    def gz(inf: str):
+    def gz(self):
         lines = []
-        with gzip.open(inf, 'rt', encoding='utf-8') as f_open:
+        with gzip.open(self.inf, 'rt', encoding='utf-8') as f_open:
             file_lines = f_open.read().split('\n')
         for line in file_lines:
             if len(line) == 0 or '#' == line[0]:
                 continue
             lines.append(line)
         return lines
-
 
 
 def randomly_get_seq_from_fasta(in_block: list, how_many_window_do_you_want: int, how_long_seq_do_you_want: int):
@@ -367,7 +389,7 @@ def randomly_get_seq_from_fasta(in_block: list, how_many_window_do_you_want: int
         for n in range(1, how_many_window_do_you_want + 1):
             start = random.sample(pool, 1)[0]
             ending = start + how_long_seq_do_you_want + 1
-            sub_block.append\
+            sub_block.append \
                 (['>number' + str(n) + '_' + block[0][1:] + '_' + str(start) + '_' + str(ending),
                   block[1][start: ending]])
         new_block.append(sub_block)
@@ -490,6 +512,33 @@ def overlap_finder(three_col_list: list):
     return overlap_list
 
 
+def overlaper(A, B):
+    intersections = {}
+
+    # 对B列表中的起始位置进行排序，以便进行二分查找
+    sorted_starts_b = sorted([(int(b[1]), idx) for idx, b in enumerate(B)])
+
+    for a in A:
+        # 获取A列表元素的起始位置和结束位置
+        start_a, end_a = int(a[1]), int(a[2])
+
+        # 在排序后的B列表中找到start_a的插入点
+        insert_point = bisect.bisect_left(sorted_starts_b, (start_a,))
+
+        # 为当前A滑窗创建一个空列表，用于存储与之相交的B滑窗
+        intersections[a[0]] = []
+
+        # 遍历从插入点开始的B列表元素，直到找到与A列表元素相交的部分或超出A列表元素的范围
+        for idx in range(insert_point, len(B)):
+            start_b, end_b = int(B[idx][1]), int(B[idx][2])
+            if start_a <= end_b and end_a >= start_b:
+                intersections[a[0]].append(B[idx])
+            elif start_b > end_a:
+                break
+
+    return intersections
+
+
 def kmerfinder(k_mer: int, input_seq: str):
     k_list = []
     n = int(len(input_seq) - k_mer + 1)
@@ -531,23 +580,23 @@ def import_zipfile_for_zip_file(in_file: str, out_zip: str):
         print('Done')
 
 
-def import_jie_ba_and_docx_and_string_for_docx_processer(docx_path: str):  # 用结巴分词对文章进行分词
-    file = docx.Document(docx_path)  # 处理docx文档
-    wanted_combo = []
-    final_combo = []
-    punc = string.punctuation
-    doc_T = ''
-    for i in file.paragraphs:
-        doc_T = doc_T + i.text
-    word_combo = list(jieba.cut(doc_T, cut_all=False))
-    for item in word_combo:
-        if item not in punc:
-            wanted_combo.append(item)
-    for str_i in wanted_combo:
-        if str_i.isdigit() or '：' in str_i:
-            continue
-        final_combo.append(str_i)
-    return final_combo
+# def import_jie_ba_and_docx_and_string_for_docx_processer(docx_path: str):  # 用结巴分词对文章进行分词
+#     file = docx.Document(docx_path)  # 处理docx文档
+#     wanted_combo = []
+#     final_combo = []
+#     punc = string.punctuation
+#     doc_T = ''
+#     for i in file.paragraphs:
+#         doc_T = doc_T + i.text
+#     word_combo = list(jieba.cut(doc_T, cut_all=False))
+#     for item in word_combo:
+#         if item not in punc:
+#             wanted_combo.append(item)
+#     for str_i in wanted_combo:
+#         if str_i.isdigit() or '：' in str_i:
+#             continue
+#         final_combo.append(str_i)
+#     return final_combo
 
 
 def sliding_window_for_list(windowSize: int, inlist: list):
@@ -617,7 +666,7 @@ def import_urllib_dot_request_to_clime_bug(link: str):  # 爬虫本体, 读出ht
     url = link
     data = urllib.request.urlopen(url).read()
     data = data.decode('UTF-8')
-    print('successfully getting the HTML data')
+    # print('successfully getting the HTML data')
     return data
 
 
@@ -736,7 +785,7 @@ def gene_extractor_v2(in_fasta: str, in_gff3: str):
 
 
 def fpkm_counter(howManyReadsMappedOnYourCtg: int, TotalMappedReads: int, ctg_length: int):
-    return (howManyReadsMappedOnYourCtg * 10 * 10 * 10 * 10 * 10 * 10 * 10 * 10 * 10)/(ctg_length * TotalMappedReads)
+    return (howManyReadsMappedOnYourCtg * 10 * 10 * 10 * 10 * 10 * 10 * 10 * 10 * 10) / (ctg_length * TotalMappedReads)
 
 
 def get_p_value(arr_a: list, arr_b: list):
@@ -755,20 +804,20 @@ def show_path(dir_name: str):
     return result
 
 
-class filter:
+class filter():
 
     def __init__(self, input):
         self.input = input
 
-    def filteNum(input: str):
-        return re.sub(r'\d+', '', input)
+    def filteNum(self):
+        return re.sub(r'\d+', '', self.input)
 
-    def filtestr(input: str):
-        return re.sub(r'[^a-zA-Z]', '', input)
+    def filtestr(self):
+        return re.sub(r'[^a-zA-Z]', '', self.input)
 
 
 def splitNumber(faL: list, n: str):
-    size=int(len(faL) / int(n))
+    size = int(len(faL) / int(n))
     s = []
     for i in range(0, int(len(faL)) + 1, size):
         c = faL[i:i + size]
@@ -779,29 +828,36 @@ def splitNumber(faL: list, n: str):
 
 class nStr:
 
-    def Sum(in_str: str):
+    def __init__(self, in_str):
+        self.in_str = in_str
+
+    def Sum(self):
         l = []
-        for i in in_str.strip().split():
+        for i in self.in_str.strip().split():
             l.append(float(i))
         return sum(l)
 
-    def Ave(in_str: str):
+    def Ave(self):
         l = []
-        for i in in_str.strip().split():
+        for i in self.in_str.strip().split():
             l.append(float(i))
-        return sum(l)/len(l)
+        return sum(l) / len(l)
 
-class nameLengthDicker:
 
-    def string(in_bed: str):
+class nameLengthDicker():
+
+    def __init__(self, in_bed: str):
+        self.in_bed = in_bed
+
+    def string(self):
         dick = {}
-        for l in openfile(in_bed):
+        for l in openfile(self.in_bed):
             dick[l.strip().split()[0]] = l.strip().split()[1]
         return dick
 
-    def int(in_bed: str):
+    def int(self):
         dick = {}
-        for l in openfile(in_bed):
+        for l in openfile(self.in_bed):
             dick[l.strip().split()[0]] = int(l.strip().split()[1])
         return dick
 
@@ -809,11 +865,10 @@ class nameLengthDicker:
 def median(data):
     data.sort()
     half = len(data) // 2
-    return int((data[half] + data[~half])/2)
+    return int((data[half] + data[~half]) / 2)
 
 
 class changeUnit:
-
     class base:
 
         def b2mb(in_n: int):
@@ -840,23 +895,123 @@ class changeUnit:
     class bit:
 
         def b2mb(in_n: int):
-            return in_n/1024/1024
+            return in_n / 1024 / 1024
 
         def b2gb(in_n: int):
-            return in_n/1024/1024/1024
+            return in_n / 1024 / 1024 / 1024
 
         def b2kb(in_n: int):
-            return in_n/1024
+            return in_n / 1024
 
         def kb2b(in_n: int):
-            return in_n*1024
+            return in_n * 1024
 
         def gb2b(in_n: int):
-            return in_n*1024*1024
+            return in_n * 1024 * 1024
 
         def kb2gb(in_n: int):
-            return in_n/1024
+            return in_n / 1024
 
         def gb2kb(in_n: int):
-            return in_n*1024
+            return in_n * 1024
 
+
+def fastaNameChanger(il: list, inb: list):
+    dick = {}
+    new_l = []
+    for i in il:
+        dick[i[0]] = i[1]
+    for block in inb:
+        if block[0][1:] in dick.keys():
+            block = ['>' + dick[block[0][1:]], ''.join(block[1:])]
+            new_l.append(block)
+        elif block[0][1:] not in dick.keys():
+            new_l.append(block)
+    return new_l
+
+
+# def (in_s: str):
+def fullZero(ins: str, n: int):
+    return ((n - len(ins)) * '0') + ins
+
+
+from colorama import Fore, Back, Style
+
+
+class Color(object):
+
+    #  前景色:红色  背景色:默认
+    def red(self, s):
+        return Fore.RED + s + Fore.RESET
+
+    #  前景色:绿色  背景色:默认
+    def green(self, s):
+        return Fore.GREEN + s + Fore.RESET
+
+    #  前景色:黄色  背景色:默认
+    def yellow(self, s):
+        return Fore.YELLOW + s + Fore.RESET
+
+    #  前景色:蓝色  背景色:默认
+    def blue(self, s):
+        return Fore.BLUE + s + Fore.RESET
+
+    #  前景色:洋红色  背景色:默认
+    def magenta(self, s):
+        return Fore.MAGENTA + s + Fore.RESET
+
+    #  前景色:青色  背景色:默认
+    def cyan(self, s):
+        return Fore.CYAN + s + Fore.RESET
+
+    #  前景色:白色  背景色:默认
+    def white(self, s):
+        return Fore.WHITE + s + Fore.RESET
+
+    #  前景色:黑色  背景色:默认
+    def black(self, s):
+        return Fore.BLACK
+
+    #  前景色:白色  背景色:绿色
+    def white_green(self, s):
+        return Fore.WHITE + Back.GREEN + s
+
+    def dave(self, s):
+        return Style.BRIGHT + Fore.GREEN + s
+
+
+class UnionFind:
+    def __init__(self, n):
+        self._f = [_ for _ in range(n)]
+
+    def find(self, x):
+        t = x
+        while t != self._f[t]:
+            t = self._f[t]
+        while x != self._f[x]:
+            tmp = self._f[x]
+            self._f[x] = t
+            x = tmp
+        return self._f[x]
+
+    def union(self, x, y):
+        fx = self.find(x)
+        fy = self.find(y)
+        if fx != fy:
+            self._f[fy] = fx
+
+
+class alphabet():
+
+    def __init__(self):
+        pass
+
+    def upper(self):
+        return [chr(i) for i in range(65, 91)]
+
+    def lower(self):
+        return [chr(i).lower() for i in range(65, 91)]
+
+
+def fillTail(inp: str, tail: str):
+    return '.'.join(inp.split('.')[:-1]) + tail
