@@ -9,4 +9,4 @@ getGFFLEN.py is a small script for building the GFF and LEN files required for W
 
 sbatch.py also is a simple script for sbatch system job submission, srun mode and straight submission mode are supported. 
   1. echo {YOUR CMD} >> cmd.txt
-  2. python3 ./sbatch.py -s cmd.txt -n plinkFilter -p low -c 1 -t 1
+  2. python3 ./sbatch.py -s cmd.txt -n {YOUR JOBS NAME} -p {NODENAMES} -c 1 -t 1
