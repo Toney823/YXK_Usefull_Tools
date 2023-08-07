@@ -15,7 +15,7 @@ cds = sys.argv[5]
 def changeFA(inf: str, dick: dict):
     newf = []
     for b in block_cacher_v2(openfile(inf), '>'):
-        newf.append('>'+dick[b[0].strip().split()[0]] + '\n' + ''.join(b[1:]))
+        newf.append('>'+dick[b[0].replace('>', '').strip().split()[0]] + '\n' + ''.join(b[1:]))
     return newf
 
 
