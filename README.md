@@ -1,5 +1,5 @@
 # YXK_Usefull_Tools
-A simple python package for the beginner of Bioinformatics.
+A simple Python package and some simple scripts for the beginner of Bioinformatics.
 
 faSpliter.py is a script in order to split your fasta file into multiple pieces.
 
@@ -10,4 +10,7 @@ getGFFLEN.py is a small script for building the GFF and LEN files required for W
 sbatch.py also is a simple script for sbatch system job submission, srun mode and straight submission mode are supported. 
   #srun mode is only can be executed in one line
   1. echo {YOUR CMD} >> cmd.txt
-  2. python3 ./sbatch.py -s cmd.txt -n {YOUR JOBS NAME} -p {NODENAMES} -c 1 -t 1 -srun(optional)
+  2. python3 ./sbatch.py -s cmd.txt -n {YOUR JOBS NAME} -p {NODENAMES} -c 1 -t 1 -srun(yes or no REQUIRED) -y (yes or [EMPTY] OPTIONAL)
+
+diploidGffRenamder.py is a simple script for organizing your gff3 file (only works for diploid genome)
+  python ./diploidGffRenamder.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR>
