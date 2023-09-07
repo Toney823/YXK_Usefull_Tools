@@ -12,5 +12,5 @@ sbatch.py also is a simple script for sbatch system job submission, srun mode an
   1. echo {YOUR CMD} >> cmd.txt
   2. python3 ./sbatch.py -s cmd.txt -n {YOUR JOBS NAME} -p {NODENAMES} -c 1 -t 1 -srun(yes or no REQUIRED) -y (yes or [EMPTY] OPTIONAL)
 
-diploidGffRenamder.py is a simple script for organizing your gff3 file (only works for diploid genome)
-  python ./diploidGffRenamder.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>
+diploidGffRenamder.py is a simple script for organizing your gff3 file
+  python ./Gff3Renamer.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>
