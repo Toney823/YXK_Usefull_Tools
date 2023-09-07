@@ -3,12 +3,15 @@ import sys
 
 
 if __name__ == "__main__" and len(sys.argv) < 4:
-    print('Usage: python3 ' + sys.argv[0] + ' <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR>')
+    print('Usage: python3 ' + sys.argv[0] + ' <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>')
     exit()
 
 og = sys.argv[1]
 abrev = sys.argv[2]
 tigMarker = sys.argv[3]
+pep = sys.argv[4]
+cds = sys.argv[5]
+genef = sys.argv[6]
 dick = {}
 
 
@@ -55,19 +58,38 @@ for b in block_cacher(openGff(og), '#'):
         dick[chr] = [b[1:]]
 
 
+def faRenamer(infa: list, d: dict):
+    newf = []
+    for b in infa:
+        n = b[0][1:]
+        for i in d:
+            if i in n or n in i or n == i:
+                newf.append('>' + d[i] + '\n' + ''.join(b[1:]))
+    return newf
+
+
 wantedGff = ['###GFF3FORMAT']
 nn = 0
+nameDick = {}
 for k in dick.keys():
     if k.startswith('Chr'):
         for n, block in enumerate(sorted(dick[k], key=lambda x: int(x[0].strip().split()[3]))):
             gene = block[0].strip().split()[-1].split(';')[0].split('=')[1]
             newName = abrev + k.replace('Chr', '') + 'G' + fullZero(str(n+1), 6) + '0'
             wantedGff.append('\n'.join(block).replace(gene, newName)+'\n###')
+            nameDick[gene] = newName
     if tigMarker in k:
         for n, block in enumerate(sorted(dick[k], key=lambda x: int(x[0].strip().split()[3]))):
             nn += 1
             gene = block[0].strip().split()[-1].split(';')[0].split('=')[1]
             newName = abrev + str(nn) + 'T' + fullZero(str(n+1), 6) + '0'
             wantedGff.append('\n'.join(block).replace(gene, newName).replace(k, abrev + 'Contig' + str(nn) )+'\n###')
-with open('.'.join(og.split('.')[:-1]) + '.reName.gff3', 'w')as f:
+            nameDick[gene] = newName
+with open('.'.join(og.split('.')[:-1]) + '.' + abrev + '.gff3', 'w')as f:
     f.write('\n'.join(wantedGff))
+with open('.'.join(og.split('.')[:-1]) + '.' + abrev + '.pep', 'w')as f:
+    f.write('\n'.join(faRenamer(infa=block_cacher(openGff(pep), '>'), d=nameDick))+'\n')
+with open('.'.join(og.split('.')[:-1]) + '.' + abrev + '.cds', 'w')as f:
+    f.write('\n'.join(faRenamer(infa=block_cacher(openGff(cds), '>'), d=nameDick))+'\n')
+with open('.'.join(og.split('.')[:-1]) + '.' + abrev + '.gene', 'w')as f:
+    f.write('\n'.join(faRenamer(infa=block_cacher(openGff(genef), '>'), d=nameDick))+'\n')
