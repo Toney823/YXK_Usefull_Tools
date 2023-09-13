@@ -3,7 +3,7 @@ import os
 import os.path
 import zipfile
 import string
-# import docx
+import docx
 import jieba
 import urllib.parse
 import urllib.request
@@ -13,6 +13,7 @@ from scipy import stats
 import re
 import gzip
 import bisect
+from met_brewer import is_colorblind_friendly, COLORBLIND_PALETTES, met_brew
 
 
 def category(data: list):
@@ -347,7 +348,6 @@ class openfile_V2:
 
     def __init__(self, inf):
         self.inf = inf
-        return
 
     def noHash(self):
         lines = []
@@ -580,23 +580,23 @@ def import_zipfile_for_zip_file(in_file: str, out_zip: str):
         print('Done')
 
 
-# def import_jie_ba_and_docx_and_string_for_docx_processer(docx_path: str):  # 用结巴分词对文章进行分词
-#     file = docx.Document(docx_path)  # 处理docx文档
-#     wanted_combo = []
-#     final_combo = []
-#     punc = string.punctuation
-#     doc_T = ''
-#     for i in file.paragraphs:
-#         doc_T = doc_T + i.text
-#     word_combo = list(jieba.cut(doc_T, cut_all=False))
-#     for item in word_combo:
-#         if item not in punc:
-#             wanted_combo.append(item)
-#     for str_i in wanted_combo:
-#         if str_i.isdigit() or '：' in str_i:
-#             continue
-#         final_combo.append(str_i)
-#     return final_combo
+def import_jie_ba_and_docx_and_string_for_docx_processer(docx_path: str):  # 用结巴分词对文章进行分词
+    file = docx.Document(docx_path)  # 处理docx文档
+    wanted_combo = []
+    final_combo = []
+    punc = string.punctuation
+    doc_T = ''
+    for i in file.paragraphs:
+        doc_T = doc_T + i.text
+    word_combo = list(jieba.cut(doc_T, cut_all=False))
+    for item in word_combo:
+        if item not in punc:
+            wanted_combo.append(item)
+    for str_i in wanted_combo:
+        if str_i.isdigit() or '：' in str_i:
+            continue
+        final_combo.append(str_i)
+    return final_combo
 
 
 def sliding_window_for_list(windowSize: int, inlist: list):
@@ -930,6 +930,25 @@ def fastaNameChanger(il: list, inb: list):
     return new_l
 
 
+def toTuple(color_str):
+  components = color_str.split(',')
+  r = int(components[0])
+  g = int(components[1])
+  b = int(components[2])
+  return r, g, b
+
+
+def middleColor(color1, color2):
+  r1, g1, b1 = toTuple(color1)
+  r2, g2, b2 = toTuple(color2)
+
+  interpolated_r = (r1 + r2) // 2
+  interpolated_g = (g1 + g2) // 2
+  interpolated_b = (b1 + b2) // 2
+
+  return str(interpolated_r)+','+str(interpolated_g)+','+str(interpolated_b)
+
+
 # def (in_s: str):
 def fullZero(ins: str, n: int):
     return ((n - len(ins)) * '0') + ins
@@ -1015,3 +1034,83 @@ class alphabet():
 
 def fillTail(inp: str, tail: str):
     return '.'.join(inp.split('.')[:-1]) + tail
+
+
+
+class Color:
+    '''
+    Usage:
+        Color("Hokusai1", 10).selecting()
+    '''
+    def __init__(self, tone: str, number: int):
+        self.tone = tone
+        self.number = number
+
+    @staticmethod
+    def hex_to_rgb(hex_color):
+        if hex_color.startswith("#"):
+            hex_color = hex_color[1:]
+        if len(hex_color) not in (3, 6):
+            raise ValueError("Invalid hex color: " + hex_color)
+        if len(hex_color) == 3:
+            hex_color = "".join(c * 2 for c in hex_color)
+        red_hex = hex_color[:2]
+        green_hex = hex_color[2:4]
+        blue_hex = hex_color[4:]
+        red = str(int(red_hex, 16))
+        green = str(int(green_hex, 16))
+        blue = str(int(blue_hex, 16))
+        return (red, green, blue)
+
+    def selecting(self):
+        t = []
+        for i in met_brew(name=self.tone, n=self.number, brew_type="continuous"):
+            c = list(Color.hex_to_rgb(i))
+            result = [','.join(c[ii:ii + 3]) for ii in range(0, len(c), 3)][0]
+            t.append(result)
+        return t
+
+def colorSelecting(tone: str, number: int):
+  t = []
+  def hex_to_rgb(hex_color):
+    if hex_color.startswith("#"):
+      hex_color = hex_color[1:]
+    if len(hex_color) not in (3, 6):
+      raise ValueError("Invalid hex color: " + hex_color)
+    if len(hex_color) == 3:
+      hex_color = "".join(c * 2 for c in hex_color)
+    red_hex = hex_color[:2]
+    green_hex = hex_color[2:4]
+    blue_hex = hex_color[4:]
+    red = str(int(red_hex, 16))
+    green = str(int(green_hex, 16))
+    blue = str(int(blue_hex, 16))
+    return (red, green, blue)
+
+  for i in met_brew(name=tone, n=number, brew_type="continuous"):
+    c = list(hex_to_rgb(i))
+    result = [','.join(c[ii:ii+3]) for ii in range(0, len(c), 3)][0]
+    t.append(result)
+  return t
+
+
+def readOS(incmd: str):
+    cmd = os.popen(incmd)
+    return cmd.read()
+
+
+class Entropy:
+    '''
+    Usage:
+        Entropy([1, 2, 3, 4, 5]).run()
+    '''
+    def __init__(self, inlist: list):
+        self.list = inlist
+
+    def entropy(self, lin: list):
+        p = [x/sum(lin) for x in lin]
+        return sum([-x*np.log2(x) for x in p if x > 0])
+
+    def run(self):
+        l = list(map(int, self.list))
+        return self.entropy(l)
