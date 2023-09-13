@@ -1,4 +1,11 @@
 # YXK_Usefull_Tools
+  Dependence
+    python-docx
+    jieba
+    numpy
+    scipy
+    met_brewer
+    
 A simple Python package and some simple scripts for the beginner of Bioinformatics.
 
 faSpliter.py is a script in order to split your fasta file into multiple pieces.
