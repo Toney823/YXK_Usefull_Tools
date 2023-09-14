@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import gzip
 import sys
 
@@ -69,6 +69,7 @@ class openfile_V2:
 
 
 dick = {}
+print(f'Reading {ing}')
 for i in block_cacher(openfile_V2(ing).utf8(), '>'):
     dick[i[0][1:]] = list(i[1])
 n2spe = {}
@@ -87,6 +88,8 @@ with open(inv, 'r')as f:
             alt = p[4]
             chro = p[0]
             pos = p[1]
+            if chro not in dick:
+                continue
             for number, alter in enumerate(p[9:]):
                 if alter == '0/0' and ref == dick[chro][int(pos)-1]:
                     spe2alt[n2spe[str(number)]].append([chro, int(pos)-1, ref])
@@ -106,6 +109,8 @@ for Skey in spe2alt.keys():
         print(f'Accession No.{str(n)}: {Skey} has {str(len(spe2alt[Skey]))}SNPs, Writing...')
         sfa = dick
         for line in spe2alt[Skey]:
+            if line[0] not in sfa.keys():
+                continue
             sfa[line[0]][line[1]] = line[2]
         for header in sfa.keys():
             fout.write('>'+header+'\n')
