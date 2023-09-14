@@ -21,3 +21,5 @@ sbatch.py also is a simple script for sbatch system job submission, srun mode an
 
 diploidGffRenamder.py is a simple script for organizing your gff3 file
   python ./Gff3Renamer.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>
+plinkSNP2fasta.py extract SNPs imformations from VCF and chromosomes fasta, generating mutiple chromosomes fasta files based on your sample numbers.
+  python3 plinkSNP2fasta.py <CHR_FASTA> <SNP_VCF> <OUTDIR>
