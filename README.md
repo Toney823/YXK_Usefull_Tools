@@ -23,3 +23,7 @@ diploidGffRenamder.py is a simple script for organizing your gff3 file
   python ./Gff3Renamer.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>
 plinkSNP2fasta.py extract SNPs imformations from VCF and chromosomes fasta, generating mutiple chromosomes fasta files based on your sample numbers.
   python3 plinkSNP2fasta.py <CHR_FASTA> <SNP_VCF> <OUTDIR>
+
+parablast.sh is a simple script runs blast in parallele mod
+    bash parablast.sh reference_genome(dir) query_genome(dir) data_type(pep/dna str) parts(int) threads(int)
+    Requirements are: ParaFly, ncbi-blast and split_FA.pl(from TangerZhang, you can find this script in YXK_Usefull_Tools)
