@@ -33,5 +33,5 @@ plinkSNP2fasta.py extract SNPs imformations from VCF and chromosomes fasta, gene
 
 # parablast.sh
 parablast.sh is a simple script runs blast in parallele mod  
-    #### Bash parablast.sh reference_genome(dir) query_genome(dir) data_type(pep/dna str) parts(int) threads(int)  
-    #### Requirements are:  ##ParaFly,  ##ncbi-blast  and  ##split_FA.pl###(from TangerZhang, you can find this script in YXK_Usefull_Tools)  
+  #### Bash parablast.sh reference_genome(dir) query_genome(dir) data_type(pep/dna str) parts(int) threads(int)  
+  #### Requirements are:  ##ParaFly,  ##ncbi-blast  and  ##split_FA.pl###(from TangerZhang, you can find this script in YXK_Usefull_Tools)  
