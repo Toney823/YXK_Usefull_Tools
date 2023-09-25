@@ -42,5 +42,4 @@ parablast.sh is a simple script runs blast in parallele mod
 
  ### ncbi-blast  
 and 
- ### split_FA.pl
- ### (from TangerZhang, you can find this script in YXK_Usefull_Tools)  
+ ### split_FA.pl (Which is from TangerZhang, you can find this script in YXK_Usefull_Tools)  
