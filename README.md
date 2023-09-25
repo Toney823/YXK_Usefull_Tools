@@ -5,6 +5,7 @@
 ### numpy
 ### scipy
 ### met_brewer
+### Pandas
     
 A simple Python package and some simple scripts for the beginner of Bioinformatics.
 
@@ -37,9 +38,9 @@ plinkSNP2fasta.py extract SNPs imformations from VCF and chromosomes fasta, gene
 parablast.sh is a simple script runs blast in parallele mod  
 #### Bash parablast.sh reference_genome(dir) query_genome(dir) data_type(pep/dna str) parts(int) threads(int)  
 ## Requirements are: 
-### ParaFly,  
+ ### ParaFly,  
 
-## ncbi-blast  
+ ### ncbi-blast  
 and 
-## split_FA.pl
-### (from TangerZhang, you can find this script in YXK_Usefull_Tools)  
+ ### split_FA.pl
+ ### (from TangerZhang, you can find this script in YXK_Usefull_Tools)  
