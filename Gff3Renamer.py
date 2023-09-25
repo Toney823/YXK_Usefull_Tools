@@ -73,7 +73,7 @@ nn = 0
 nameDick = {}
 for k in dick.keys():
     if k.startswith('Chr'):
-        for n, block in enumerate(sorted(dick[k], key=lambda x: int(x[0].strip().split()[3]))):
+        for n, block in enumerate(sorted(dick[k], key=lambda x: int(x[0].strip().split()[3:]))):
             gene = block[0].strip().split()[-1].split(';')[0].split('=')[1]
             newName = abrev + k.replace('Chr', '') + 'G' + fullZero(str(n+1), 6) + '0'
             wantedGff.append('\n'.join(block).replace(gene, newName)+'\n###')
