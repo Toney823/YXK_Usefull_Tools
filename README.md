@@ -31,11 +31,11 @@ sbatch.py also is a simple script for sbatch system job submission, srun mode an
 #### python ./Gff3Renamer.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>  
  
 # plinkSNP2fasta.py
-plinkSNP2fasta.py extract SNPs imformations from VCF and chromosomes fasta, generating mutiple chromosomes fasta files based on your sample numbers.  
+plinkSNP2fasta.py extract SNPs information from VCF and chromosomes fasta, generating multiple chromosomes fasta files based on your sample numbers.  
 #### python3 plinkSNP2fasta.py <CHR_FASTA> <SNP_VCF> <OUTDIR>  
 
 # parablast.sh
-parablast.sh is a simple script runs blast in parallele mod  
+parablast.sh is a simple script runs blast in parallel mod  
 #### Bash parablast.sh reference_genome(dir) query_genome(dir) data_type(pep/dna str) parts(int) threads(int)  
 ## Requirements are: 
  ### ParaFly,  
