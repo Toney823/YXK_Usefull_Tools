@@ -10,7 +10,7 @@ library('rMVP')
 
 if (length(args) < 4) {
   cat("\nUsage: Rscript runMVP.R <PhenotypeFile> <IndexName> <Threshold> <ModelName>\n")
-  q(status = 1)  # 退出脚本并返回错误状态码
+  q(status = 1) 
 }
 
 
