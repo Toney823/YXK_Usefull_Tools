@@ -4,9 +4,9 @@ import sys
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("This script is designed to reverse complement of One || a file || All DNA sequence/s")
-        print("Usage:\n\tpython3 "+ sys.argv[0] + '  <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || 0: INT>\n')
-        print("\tInstructions: \n\t\t<seqName>\tThis is a ID, if you want only one sequence get reversed and complemented\n\t\t<IdList.txt>\tThis is a file contains all of id you want to reversed and complemented\n\t\t<0>\t\tMeans reverse and complement all of your fasta file.")
+        print('This script is designed to reverse complement of One || a file || \',\' separated || All DNA sequence/s')
+        print("Usage:\n\tpython3 "+ sys.argv[0] + '  <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || \',\' separated || 0: INT>\n')
+        print("\tInstructions: \n\t\t<seqName>\tThis is a ID, if you want only one sequence get reversed and complemented\n\t\t<IdList.txt>\tThis is a file contains all of id you want to reversed and complemented\n\t\t<\',\'separated> Means you can us , separated string as input like: seq1,seq2,seq3...\n\t\t<0>\t\tMeans reverse and complement all of your fasta file.")
         print('\n\tAll <seqName> <IdList.txt> <0> are mutually exclusive.')
         exit()
 
@@ -77,6 +77,15 @@ if not os.path.exists(name) and name != '0':
         if k in name:
             wantedl.append('>' + k + '\n' + rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+f'.{name}.reversed.fa', 'w')as f:
+        f.write('\n'.join(wantedl)+'\n')
+if ',' in name and len(name.split(',')) >= 2:
+    namel = name.split(',')
+    for k in dick:
+        if k not in namel:
+            wantedl.append('>' + k + '\n' + dick[k])
+        if k in namel:
+            wantedl.append('>' + k + '\n' + rcDNA(dick[k]))
+    with open('.'.join(fa.split('.')[:-1])+f'.{len(namel)}Seq.reversed.fa', 'w')as f:
         f.write('\n'.join(wantedl)+'\n')
 elif not os.path.exists(name) and name != '0' and name not in dick:
     print('Input Error Check Your Data!')
