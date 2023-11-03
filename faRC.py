@@ -2,13 +2,14 @@
 import os
 import sys
 
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print('This script is designed to reverse complement of One || a file || \',\' separated || All DNA sequence/s')
-        print("Usage:\n\tpython3 "+ sys.argv[0] + '  <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || 0: INT>\n')
-        print("\tInstructions: \n\t\t<seqName>\tThis is a ID, if you want only one sequence get reversed and complemented\n\t\t<IdList.txt>\tThis is a file contains all of id you want to reversed and complemented\n\t\t<0>\t\tMeans reverse and complement all of your fasta file.")
-        print('\n\tAll <seqName> <IdList.txt> <0> are mutually exclusive.')
-        exit()
+if __name__ == "__main__" and len(sys.argv) != 3:
+    print('This script is designed to reverse complement of One || a file || \',\' separated || All DNA sequence/s')
+    print("Usage:\n\tpython3 "+ sys.argv[0] + '  <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || 0: INT>\n')
+    print('\tInstructions: \n\t\t<seqName>\t\tThis is a ID, if you want only one sequence get reversed and '
+          'complemented\n\t\t<IdList.txt>\tThis is a file contains all of id you want to reversed and '
+          'complemented\n\t\t<0>\t\t\t\tMeans reverse and complement all of your fasta file.')
+    print('\n\tAll <seqName> <IdList.txt> <0> are mutually exclusive.')
+    exit()
 
 fa = sys.argv[1]
 name = sys.argv[2]
@@ -62,12 +63,12 @@ if name != '0' and os.path.exists(name):
         if k not in n:
             wantedl.append('>'+k+'\n'+dick[k])
         if k in n:
-            wantedl.append('>'+k+'\n'+rcDNA(dick[k]))
+            wantedl.append('>'+k+'_reversedComplement\n'+rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+f'.{str(len(n))}Seq.reversed.fa', 'w')as f:
         f.write('\n'.join(wantedl)+'\n')
 if not os.path.exists(name) and name == '0':
     for k in dick:
-        wantedl.append('>'+k+'\n'+rcDNA(dick[k]))
+        wantedl.append('>'+k+'_reversedComplement\n'+rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+'.all.reversed.fa', 'w')as f:
         f.write('\n'.join(wantedl)+'\n')
 if not os.path.exists(name) and name != '0':
@@ -75,7 +76,7 @@ if not os.path.exists(name) and name != '0':
         if k not in name:
             wantedl.append('>' + k + '\n' + dick[k])
         if k in name:
-            wantedl.append('>' + k + '\n' + rcDNA(dick[k]))
+            wantedl.append('>' + k + '_reversedComplement\n' + rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+f'.{name}.reversed.fa', 'w')as f:
         f.write('\n'.join(wantedl)+'\n')
 elif not os.path.exists(name) and name != '0' and name not in dick:
