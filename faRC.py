@@ -3,7 +3,7 @@ import os
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print("This script is designed to reverse complement of One || a file || All DNA sequence/s")
         print("Usage:\n\tpython3 "+ sys.argv[0] + '  <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || 0: INT>\n')
         print("\tInstructions: \n\t\t<seqName>\tThis is a ID, if you want only one sequence get reversed and complemented\n\t\t<IdList.txt>\tThis is a file contains all of id you want to reversed and complemented\n\t\t<0>\t\tMeans reverse and complement all of your fasta file.")
@@ -64,12 +64,12 @@ if name != '0' and os.path.exists(name):
         if k in n:
             wantedl.append('>'+k+'\n'+rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+f'.{str(len(n))}Seq.reversed.fa', 'w')as f:
-        f.write('\n'.join(wantedl))
+        f.write('\n'.join(wantedl)+'\n')
 if not os.path.exists(name) and name == '0':
     for k in dick:
         wantedl.append('>'+k+'\n'+rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+'.all.reversed.fa', 'w')as f:
-        f.write('\n'.join(wantedl))
+        f.write('\n'.join(wantedl)+'\n')
 if not os.path.exists(name) and name != '0':
     for k in dick:
         if k not in name:
@@ -77,6 +77,6 @@ if not os.path.exists(name) and name != '0':
         if k in name:
             wantedl.append('>' + k + '\n' + rcDNA(dick[k]))
     with open('.'.join(fa.split('.')[:-1])+f'.{name}.reversed.fa', 'w')as f:
-        f.write('\n'.join(wantedl))
-else:
+        f.write('\n'.join(wantedl)+'\n')
+elif not os.path.exists(name) and name != '0' and name not in dick:
     print('Input Error Check Your Data!')
