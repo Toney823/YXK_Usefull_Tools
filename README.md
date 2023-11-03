@@ -42,4 +42,13 @@ parablast.sh is a simple script runs blast in parallel mod
 
  ### ncbi-blast  
 and 
- ### split_FA.pl (Which is from TangerZhang, you can find this script in YXK_Usefull_Tools)  
+ ### split_FA.pl (Which is from TangerZhang, you can find this script in YXK_Usefull_Tools) 
+
+ # faRC.py
+ A simple script for DNA sequences reverse and complement
+ #### python3 faRC.py <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || 0: INT>
+ 	Instructions: 
+		<seqName>		This is a ID, if you want only one sequence get reversed and complemented
+		<IdList.txt>	This is a file contains all of id you want to reversed and complemented
+		<0>				Means reverse and complement all of your fasta file.
+  
