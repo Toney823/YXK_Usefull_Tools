@@ -68,7 +68,7 @@ def faRenamer(infa: list, d: dict):
     return newf
 
 
-wantedGff = ['###GFF3FORMAT']
+wantedGff = ['###GFF3FORMAT###']
 nn = 0
 nameDick = {}
 for k in dick.keys():
