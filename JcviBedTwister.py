@@ -1,10 +1,11 @@
+#!/usr/bin/env python3
 import sys
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         print("This script is designed twist the bed file by chromosomes required by JCVI")
-        print("Usage:\n\tpython3 "+sys.argv[0]+" <inbed:STR--Old JCVI`s bed> <outbed:STR--New JCVI`s bed> <ChrList:STR--Chromosomes you want to twist>")
+        print("Usage:\n\tpython3 "+sys.argv[0]+" <inbed:STR--Old JCVI`s bed> <ChrList:STR--Chromosomes you want to twist>")
         exit()
 
 
@@ -36,8 +37,8 @@ def bed2Dick(inbed: str):
 
 
 fin = sys.argv[1]#r"E:\LW\XZWJ\line3.bed"
-fo =sys.argv[2]#r"E:\LW\XZWJ\line3.tested.bed"
-toDoChr = openfile(sys.argv[3])#['pbsqHic_asm_6', 'pbsqHic_asm_1']
+fo ='.'.join(fin.split('.')[:-1])+'.twisted.bed'#r"E:\LW\XZWJ\line3.tested.bed"
+toDoChr = openfile(sys.argv[2])#['pbsqHic_asm_6', 'pbsqHic_asm_1']
 
 
 orientDick={"+": "-", "-": "+"}
