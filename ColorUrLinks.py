@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 
 
@@ -43,10 +44,7 @@ karyotype = sys.argv[2]
 for i in openfile(karyotype):
     p = i.split('\t')
     dick[p[2]] = p[-1]
-# colors = '223,158,212 218,137,184 213,117,157 209,96,129 204,75,102 204,75,86 211,106,89 218,137,92 225,167,95 233,198,97 205,196,101 170,186,106 134,175,110 99,165,115 70,153,120 67,136,127 65,118,135 63,100,142 61,82,150 71,74,153 90,71,153 109,69,153 127,66,153 146,64,153'
 
-# for chr, c in zip(['Chr' + fullZero(str(i), 2) for i in range(1, 25)], colors.strip().split()):
-#     dick[chr] = c
 wanted = ['\t'.join(line.split('\t')[:]) + '\tcolor='+middleColor(dick[line.strip().split()[0]], dick[line.strip().split()[3]]) for line in openfile(sys.argv[1]) ]
 with open("./colored.links", 'w')as f:
     f.write('\n'.join(wanted))
