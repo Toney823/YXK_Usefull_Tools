@@ -35,6 +35,7 @@ def middleColor(color1, color2):
 
 
 if __name__ == "__main__" and len(sys.argv) < 3:
+    print('This is a simple script, designed to make your links of the circos plot looked a bit prettier.')
     print('Usage: python3 ' + sys.argv[0] + ' <linksFile: STR/PATH> <KaryoTypeFile: STR/PATH>')
     exit()
 
