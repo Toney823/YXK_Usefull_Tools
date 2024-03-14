@@ -31,11 +31,11 @@ sbatch.py also is a simple script for sbatch system job submission, srun mode an
 #### python ./Gff3Renamer.py <GFF3: STR/PATH> <ABBREVIATION: STR> <CONTIGMARKER: STR> <PEP: STR> <CDS: STR> <GENE: STR>  
  
 # plinkSNP2fasta.py
-plinkSNP2fasta.py extract SNPs information from VCF and chromosomes fasta, generating multiple chromosomes fasta files based on your sample numbers.  
+plinkSNP2fasta.py extracts SNPs information from VCF and chromosomes fasta, generating multiple chromosomes fasta files based on your sample numbers.  
 #### python3 plinkSNP2fasta.py <CHR_FASTA> <SNP_VCF> <OUTDIR>  
 
 # parablast.sh
-parablast.sh is a simple script runs blast in parallel mod  
+parablast.sh is a simple script that runs blast in parallel mod  
 #### Bash parablast.sh reference_genome(dir) query_genome(dir) data_type(pep/dna str) parts(int) threads(int)  
 ## Requirements are: 
  ### ParaFly,  
@@ -48,7 +48,7 @@ and
  A simple script for DNA sequences reverse and complement
  #### python3 faRC.py <DNA.fa: STR>  <seqName: STR || IdList.txt: STR || 0: INT>
  	Instructions: 
-		<seqName>		This is a ID, if you want only one sequence get reversed and complemented
-		<IdList.txt>	This is a file contains all of id you want to reversed and complemented
-		<0>				Means reverse and complement all of your fasta file.
+		<seqName>		This is an ID, if you want only one sequence get reversed and complemented
+		<IdList.txt>	This is a file containing all of the id you want to reverse and complement
+		<0>				Means reverse and complement all of your fasta files.
   
