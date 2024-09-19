@@ -9,7 +9,7 @@ if __name__ == "__main__":
         sys.exit()
 
 
-f = sys.argv[1]
+f = sys.argv[1]#r"F:\ITAG4.0_gene_models.gff"
 
 
 def openfile(path: str):
@@ -69,7 +69,7 @@ for b in gffblocker(openfile(f)):
             nn = str(n+1)
             intronE = int(l[i]) - 1
             intronS = int(l[i - 1]) + 1
-            intronLine = '\t'.join([l[1], 'Python', 'intron', str(intronS), str(intronE), '0', l[4], 'ID=intron:'+l[0]+'.intron.'+nn+';Parent=' + mrna])
+            intronLine = '\t'.join([l[1], 'Python', 'intron', str(intronS), str(intronE), '0', l[4], '.\tID=intron:'+l[0]+'.intron.'+nn+';Parent=' + mrna])
             b.append(intronLine)
             n+=1
     if tmpLenth == 7:
