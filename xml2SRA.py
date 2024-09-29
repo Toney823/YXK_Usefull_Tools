@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 import sys
 
 
-if __name__ == "__main__" and len(sys.argv) != 4:
+if __name__ == "__main__" and len(sys.argv) != 2:
     print('This script is designed to SRA imformations from XML file downloaded from NCBI')
     print("Usage:\n\tpython3 "+ sys.argv[0] + ' <SRA_XML: STR>')
     exit()
