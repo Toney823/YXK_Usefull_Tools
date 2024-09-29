@@ -31,6 +31,6 @@ for experiment_package in root.findall('EXPERIMENT_PACKAGE'):
             'TITLE': title
         })
 
-# 打印结果
+
 for sample in samples_info:
     print(sample['SRA ID'] +'\t' + sample['FASTQ Name'] + '\t' + sample['TITLE'])
