@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#check if all arguments are provided
+
 if [ "$#" -ne 4 ]; then
     echo -e "This script is designed to draw the pheno distribution of a gaven SNP"
     echo -e "\nUsage: $0 VCF(str) PhenoType(str) phenotypeFile(str) SNPName(str)"
@@ -11,7 +11,7 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
-#assign argument values to variables
+
 vcf=$1
 phe=$2
 pheF=$3
