@@ -49,7 +49,12 @@ def rcDNA(inSeq: str):
         'C': 'G',
         'T': 'A',
         'G': 'C',
-        'N': 'N'
+        'N': 'N',
+        'a': 't',
+        'c': 'g',
+        't': 'a',
+        'g': 'c',
+        'n': 'n'
     }
     l = [seqDick[i] for i in inSeq[::-1]]
     return ''.join(l)
