@@ -8,14 +8,14 @@
 library('rMVP')
 
 
+args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 4) {
-  cat("\nUsage: Rscript runMVP.R <PhenotypeFile> <IndexName> <Threshold> <ModelName>\n")
-  q(status = 1) 
+  cat("\nUsage: Rscript runMVP.R <PhenotypeFile> <IndexName> <Threshold> <ModelName> <cpuNumber>\n")
+  quit(status = 1)
 }
 
 
-args <- commandArgs(trailingOnly=TRUE)
-setwd(getwd())
+asetwd(getwd())
 genotype <- attach.big.matrix(paste(args[2], ".geno.desc"))
 phenotype  <- read.table(args[1], header = TRUE, sep='\t')
 map <- read.table(paste(args[2], ".geno.map" , head = TRUE)
@@ -30,7 +30,7 @@ for(i in 2:ncol(phenotype)){
     K=Kinship,
     CV.FarmCPU=Covariates,
     priority="speed",
-    ncpus=5,
+    ncpus=as.numeric(args[5]),
     vc.method="BRENT",
     maxLoop=10,
     method.bin="static",
