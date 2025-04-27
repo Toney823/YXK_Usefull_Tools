@@ -15,7 +15,6 @@ if (length(args) < 4) {
 }
 
 
-asetwd(getwd())
 genotype <- attach.big.matrix(paste(args[2], ".geno.desc"))
 phenotype  <- read.table(args[1], header = TRUE, sep='\t')
 map <- read.table(paste(args[2], ".geno.map" , head = TRUE)
