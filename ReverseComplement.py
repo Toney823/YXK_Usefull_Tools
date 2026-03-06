@@ -13,7 +13,7 @@ def Instructions():
     return Instruction.parse_args()
 
 
-db = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
+db = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
 
 
 def block_cacher_v2(lines: list, separator_first: str):
@@ -82,3 +82,4 @@ if __name__ == '__main__':
     s = ins.start
     e = ins.end
     writeFa(in_f=in_f, s=s, e=e)
+
